@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_weight="1"
+        app:draw_mode="loop"
         app:max_value="30"
         app:wave_background="#000000"
         app:wave_line_color="#ffff00"
@@ -36,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_weight="1"
+        app:draw_mode="normal"
         app:grid_visible="false"
         app:wave_line_stroke_width="5" />
 

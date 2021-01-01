@@ -12,6 +12,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description: 波形图绘制控件
@@ -22,41 +23,84 @@ public class WaveView extends View {
 
     private final String NAMESPACE = "http://schemas.android.com/apk/res-auto";
 
-    /** 宽高*/
+    /** 常规绘制模式 不断往后推的方式*/
+    public static int NORMAL_MODE = 0;
+
+    /** 循环绘制模式*/
+    public static int LOOP_MODE = 1;
+
+    /** 绘制模式*/
+    private int drawMode;
+
+    /**
+     * 宽高
+     */
     private float mWidth = 0, mHeight = 0;
-    /** 网格画笔*/
+    /**
+     * 网格画笔
+     */
     private Paint mLinePaint;
-    /** 数据线画笔*/
+    /**
+     * 数据线画笔
+     */
     private Paint mWavePaint;
-    /** 线条的路径*/
+    /**
+     * 线条的路径
+     */
     private Path mPath;
 
-    /** 保存已绘制的数据坐标*/
-    private ArrayList dataList = new ArrayList();
+    /**
+     * 保存已绘制的数据坐标
+     */
+    private float[] dataArray;
 
-    /** 数据最大值，默认-20~20之间 */
+    /**
+     * 数据最大值，默认-20~20之间
+     */
     private float MAX_VALUE = 20;
-    /** 线条粗细*/
+    /**
+     * 线条粗细
+     */
     private float WAVE_LINE_STROKE_WIDTH = 3;
-    /** 波形颜色*/
+    /**
+     * 波形颜色
+     */
     private int waveLineColor = Color.parseColor("#EE4000");
-    /** 当前的x，y坐标*/
+    /**
+     * 当前的x，y坐标
+     */
     private float nowX, nowY;
-    /** 线条的长度，可用于控制横坐标*/
+    /**
+     * 线条的长度，可用于控制横坐标
+     */
     private int WAVE_LINE_WIDTH = 10;
-    /** 数据点的数量*/
+    /**
+     * 数据点的数量
+     */
     private int row;
 
+    private int draw_index;
 
-    /** 网格是否可见*/
+
+    /**
+     * 网格是否可见
+     */
     private boolean gridVisible;
-    /** 网格的宽高*/
+    /**
+     * 网格的宽高
+     */
     private final int GRID_WIDTH = 50;
-    /** 网格的横线和竖线的数量*/
+    /**
+     * 网格的横线和竖线的数量
+     */
     private int gridHorizontalNum, gridVerticalNum;
-    /** 网格线条的粗细*/
+    /**
+     * 网格线条的粗细
+     */
     private final int GRID_LINE_WIDTH = 2;
-    /** 网格颜色*/
+    /**
+     * 网格颜色
+     */
     private int gridLineColor = Color.parseColor("#1b4200");
 
     public WaveView(Context context, @Nullable AttributeSet attrs) {
@@ -81,20 +125,21 @@ public class WaveView extends View {
         WAVE_LINE_WIDTH = attrs.getAttributeIntValue(NAMESPACE, "wave_line_width", 10);
         WAVE_LINE_STROKE_WIDTH = attrs.getAttributeIntValue(NAMESPACE, "wave_line_stroke_width", 3);
         gridVisible = attrs.getAttributeBooleanValue(NAMESPACE, "grid_visible", true);
+        drawMode = attrs.getAttributeIntValue(NAMESPACE, "draw_mode", NORMAL_MODE);
 
 
         String wave_line_color = attrs.getAttributeValue(NAMESPACE, "wave_line_color");
-        if (wave_line_color != null && !wave_line_color.isEmpty()){
+        if (wave_line_color != null && !wave_line_color.isEmpty()) {
             waveLineColor = Color.parseColor(wave_line_color);
         }
 
         String grid_line_color = attrs.getAttributeValue(NAMESPACE, "grid_line_color");
-        if (grid_line_color != null && !grid_line_color.isEmpty()){
+        if (grid_line_color != null && !grid_line_color.isEmpty()) {
             gridLineColor = Color.parseColor(grid_line_color);
         }
 
         String wave_background = attrs.getAttributeValue(NAMESPACE, "wave_background");
-        if (wave_background != null && !wave_background.isEmpty()){
+        if (wave_background != null && !wave_background.isEmpty()) {
             setBackgroundColor(Color.parseColor(wave_background));
         }
 
@@ -129,6 +174,8 @@ public class WaveView extends View {
         /** 根据网格的单位长宽，获取能绘制网格横线和竖线的数量*/
         gridHorizontalNum = (int) (mHeight / GRID_WIDTH);
         gridVerticalNum = (int) (mWidth / GRID_WIDTH);
+
+        dataArray = new float[row + 10];
     }
 
     @Override
@@ -136,27 +183,63 @@ public class WaveView extends View {
         super.onDraw(canvas);
 
         /** 绘制网格*/
-        if (gridVisible){
+        if (gridVisible) {
             drawGrid(canvas);
         }
         /** 绘制折线*/
-        drawWaveLine(canvas);
+        switch (drawMode){
+            case 0:
+                drawWaveLineNormal(canvas);
+                break;
+            case 1:
+                drawWaveLineLoop(canvas);
+                break;
+        }
     }
 
     /**
-     * 绘制折线
+     * 常规模式绘制折线
+     *
+     * @param canvas
+     * */
+    private void drawWaveLineNormal(Canvas canvas){
+        drawPathFromDatas(canvas, 0, row);
+        if (drawMode == NORMAL_MODE){
+            for (int i=0;i<row;i++){
+                dataArray[i] = dataArray[i + 1];
+            }
+        }
+    }
+
+    /**
+     * 循环模式绘制折线
      *
      * @param canvas
      */
-    private void drawWaveLine(Canvas canvas) {
-        if (null == dataList || dataList.size() <= 0) {
-            return;
+    private void drawWaveLineLoop(Canvas canvas) {
+        if (draw_index < row - 7){
+            /** 绘制两条中间有断开的线*/
+            drawPathFromDatas(canvas, 0, draw_index + 1);
+            drawPathFromDatas(canvas, draw_index + 5, row);
+        }else {
+            /** 数据绘制到末尾，则只绘制一条线*/
+            drawPathFromDatas(canvas, 0, row);
         }
+
+        draw_index += 1;
+    }
+
+    /**
+     * 取数组中的指定一段数据来绘制折线
+     * @param start 起始数据位
+     * @param end 结束数据位
+     * */
+    private void drawPathFromDatas(Canvas canvas, int start, int end){
         mPath.reset();
-        mPath.moveTo(0f, mHeight / 2);
-        for (int i = 0; i < dataList.size(); i++) {
+        mPath.moveTo(start * WAVE_LINE_WIDTH, mHeight / 2);
+        for (int i = start; i < end; i++) {
             nowX = i * WAVE_LINE_WIDTH;
-            float dataValue = (float) dataList.get(i);
+            float dataValue = dataArray[i];
             /** 判断数据为正数还是负数  超过最大值的数据按最大值来绘制*/
             if (dataValue > 0) {
                 if (dataValue > MAX_VALUE) {
@@ -171,16 +254,13 @@ public class WaveView extends View {
             mPath.lineTo(nowX, nowY);
         }
         canvas.drawPath(mPath, mWavePaint);
-        if (dataList.size() > row) {
-            dataList.remove(0);
-        }
     }
 
     /**
      * 绘制网格
      *
      * @param canvas
-     * */
+     */
     private void drawGrid(Canvas canvas) {
         /** 设置颜色*/
         mLinePaint.setColor(gridLineColor);
@@ -198,50 +278,62 @@ public class WaveView extends View {
 
     /**
      * 添加新的数据
-     * */
+     */
     public void showLine(float line) {
-        dataList.add(line);
+        if (draw_index >= row) {
+            draw_index = 0;
+        }
+        switch (drawMode){
+            case 0:
+                /** 常规模式数据添加至最后一位*/
+                dataArray[row - 1] = line;
+                break;
+            case 1:
+                /** 循环模式数据添加至当前绘制的位*/
+                dataArray[draw_index] = line;
+                break;
+        }
         postInvalidate();
     }
 
-    /** 清空已有数据*/
-    public void clearAllLine() {
-        dataList.clear();
-    }
 
-
-    public WaveView setMaxValue(int max_value){
+    public WaveView setMaxValue(int max_value) {
         this.MAX_VALUE = max_value;
         return this;
     }
 
-    public WaveView setWaveLineWidth(int width){
+    public WaveView setWaveLineWidth(int width) {
         this.WAVE_LINE_WIDTH = width;
         return this;
     }
 
-    public WaveView setWaveLineStrokeWidth(int width){
+    public WaveView setWaveLineStrokeWidth(int width) {
         this.WAVE_LINE_WIDTH = width;
         return this;
     }
 
-    public WaveView setWaveLineColor(String colorString){
+    public WaveView setWaveLineColor(String colorString) {
         this.waveLineColor = Color.parseColor(colorString);
         return this;
     }
 
-    public WaveView setGridVisible(boolean visible){
+    public WaveView setGridVisible(boolean visible) {
         this.gridVisible = visible;
         return this;
     }
 
-    public WaveView setGridLineColor(String colorString){
+    public WaveView setGridLineColor(String colorString) {
         this.gridLineColor = Color.parseColor(colorString);
         return this;
     }
 
-    public WaveView setWaveBackground(String colorString){
+    public WaveView setWaveBackground(String colorString) {
         setBackgroundColor(Color.parseColor(colorString));
+        return this;
+    }
+
+    public WaveView setWaveDrawMode(int draw_mode){
+        this.drawMode = draw_mode;
         return this;
     }
 

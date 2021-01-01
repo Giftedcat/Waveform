@@ -8,5 +8,9 @@
         <attr name="grid_line_color" format="string" />
         <attr name="wave_background" format="string"/>
         <attr name="grid_visible" format="boolean" />
+        <attr name="draw_mode" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="loop" value="1" />
+        </attr>
     </declare-styleable>
 </resources>
