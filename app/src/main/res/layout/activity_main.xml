@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="波形图1"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <com.giftedcat.wavelib.view.WaveView
+        android:id="@+id/wave_view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        app:max_value="30"
+        app:wave_background="#000000"
+        app:wave_line_color="#ffff00"
+        app:wave_line_width="20" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="波形图2"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <com.giftedcat.wavelib.view.WaveView
+        android:id="@+id/wave_view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        app:grid_visible="false"
+        app:wave_line_stroke_width="5" />
+
+</LinearLayout>

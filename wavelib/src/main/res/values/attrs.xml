@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WaveView">
+        <attr name="max_value" format="integer" />
+        <attr name="wave_line_width" format="integer" />
+        <attr name="wave_line_stroke_width" format="integer" />
+        <attr name="wave_line_color" format="string" />
+        <attr name="grid_line_color" format="string" />
+        <attr name="wave_background" format="string"/>
+        <attr name="grid_visible" format="boolean" />
+    </declare-styleable>
+</resources>
