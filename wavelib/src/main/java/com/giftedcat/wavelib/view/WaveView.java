@@ -85,6 +85,8 @@ public class WaveView extends View {
 
     private int draw_index;
 
+    private boolean isRefresh;
+
 
     /**
      * 网格是否可见
@@ -240,6 +242,10 @@ public class WaveView extends View {
         startY = mHeight / 2 - dataArray[start] * (mHeight / (MAX_VALUE * 2));
         mPath.moveTo(start * WAVE_LINE_WIDTH, startY);
         for (int i = start; i < end; i++) {
+            if (isRefresh){
+                isRefresh = false;
+                return;
+            }
             nowX = i * WAVE_LINE_WIDTH;
             float dataValue = dataArray[i];
             /** 判断数据为正数还是负数  超过最大值的数据按最大值来绘制*/
@@ -308,6 +314,7 @@ public class WaveView extends View {
     public WaveView setWaveLineWidth(int width) {
         this.WAVE_LINE_WIDTH = width;
         row = (int) (mWidth / WAVE_LINE_WIDTH);
+        isRefresh = true;
         dataArray = new float[row + 10];
         return this;
     }
