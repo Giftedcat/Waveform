@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="WaveView">
+        <!--最大值 默认为20，数据为-20 ~ 20-->
         <attr name="max_value" format="integer" />
+        <!--波形图折线单位宽度，通过修改该参数，控制横坐标的单位-->
         <attr name="wave_line_width" format="integer" />
+        <!--波形图折线的线宽-->
         <attr name="wave_line_stroke_width" format="integer" />
+        <!--波形图折线的颜色-->
         <attr name="wave_line_color" format="string" />
+        <!--背景网格图的颜色-->
         <attr name="grid_line_color" format="string" />
+        <!--背景颜色，默认为黑-->
         <attr name="wave_background" format="string"/>
+        <!--背景网格是否可见-->
         <attr name="grid_visible" format="boolean" />
+        <!--波形图绘制模式，常规和循环-->
         <attr name="draw_mode" format="enum">
             <enum name="normal" value="0" />
             <enum name="loop" value="1" />

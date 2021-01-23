@@ -29,8 +29,7 @@ public class WaveUtil {
             @Override
             public void run() {
                 data = new Random().nextFloat()*(20f)-10f;
-                Log.i("data is", data + "");
-                waveShowView.showLine(data);//取得是-20到20间的浮点数
+                waveShowView.showLine(data);//取得是-10到10间的浮点数
             }
         };
         //500表示调用schedule方法后等待500ms后调用run方法，50表示以后调用run方法的时间间隔

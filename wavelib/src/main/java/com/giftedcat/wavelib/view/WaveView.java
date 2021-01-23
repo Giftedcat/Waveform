@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -70,6 +71,9 @@ public class WaveView extends View {
      * 当前的x，y坐标
      */
     private float nowX, nowY;
+
+    private float startY;
+
     /**
      * 线条的长度，可用于控制横坐标
      */
@@ -168,13 +172,12 @@ public class WaveView extends View {
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
 
-        /** 根据线条长度，最多能绘制多少个数据点*/
-        row = (int) (mWidth / WAVE_LINE_WIDTH);
-
         /** 根据网格的单位长宽，获取能绘制网格横线和竖线的数量*/
         gridHorizontalNum = (int) (mHeight / GRID_WIDTH);
         gridVerticalNum = (int) (mWidth / GRID_WIDTH);
 
+        /** 根据线条长度，最多能绘制多少个数据点*/
+        row = (int) (mWidth / WAVE_LINE_WIDTH);
         dataArray = new float[row + 10];
     }
 
@@ -219,14 +222,12 @@ public class WaveView extends View {
     private void drawWaveLineLoop(Canvas canvas) {
         if (draw_index < row - 7){
             /** 绘制两条中间有断开的线*/
-            drawPathFromDatas(canvas, 0, draw_index + 1);
+            drawPathFromDatas(canvas, 0, draw_index - 3);
             drawPathFromDatas(canvas, draw_index + 5, row);
         }else {
             /** 数据绘制到末尾，则只绘制一条线*/
-            drawPathFromDatas(canvas, 0, row);
+            drawPathFromDatas(canvas, 0, draw_index - 1);
         }
-
-        draw_index += 1;
     }
 
     /**
@@ -236,7 +237,8 @@ public class WaveView extends View {
      * */
     private void drawPathFromDatas(Canvas canvas, int start, int end){
         mPath.reset();
-        mPath.moveTo(start * WAVE_LINE_WIDTH, mHeight / 2);
+        startY = mHeight / 2 - dataArray[start] * (mHeight / (MAX_VALUE * 2));
+        mPath.moveTo(start * WAVE_LINE_WIDTH, startY);
         for (int i = start; i < end; i++) {
             nowX = i * WAVE_LINE_WIDTH;
             float dataValue = dataArray[i];
@@ -291,8 +293,10 @@ public class WaveView extends View {
             case 1:
                 /** 循环模式数据添加至当前绘制的位*/
                 dataArray[draw_index] = line;
+                Log.i("now draw is----------", draw_index + "");
                 break;
         }
+        draw_index += 1;
         postInvalidate();
     }
 
