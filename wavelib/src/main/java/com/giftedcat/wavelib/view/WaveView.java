@@ -293,7 +293,6 @@ public class WaveView extends View {
             case 1:
                 /** 循环模式数据添加至当前绘制的位*/
                 dataArray[draw_index] = line;
-                Log.i("now draw is----------", draw_index + "");
                 break;
         }
         draw_index += 1;
@@ -308,6 +307,8 @@ public class WaveView extends View {
 
     public WaveView setWaveLineWidth(int width) {
         this.WAVE_LINE_WIDTH = width;
+        row = (int) (mWidth / WAVE_LINE_WIDTH);
+        dataArray = new float[row + 10];
         return this;
     }
 

@@ -14,6 +14,13 @@
         android:textColor="#000000"
         android:textSize="24sp" />
 
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:max="40"
+        android:progress="20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.giftedcat.wavelib.view.WaveView
         android:id="@+id/wave_view1"
         android:layout_width="match_parent"
