@@ -24,13 +24,19 @@ public class WaveView extends View {
 
     private final String NAMESPACE = "http://schemas.android.com/apk/res-auto";
 
-    /** 常规绘制模式 不断往后推的方式*/
+    /**
+     * 常规绘制模式 不断往后推的方式
+     */
     public static int NORMAL_MODE = 0;
 
-    /** 循环绘制模式*/
+    /**
+     * 循环绘制模式
+     */
     public static int LOOP_MODE = 1;
 
-    /** 绘制模式*/
+    /**
+     * 绘制模式
+     */
     private int drawMode;
 
     /**
@@ -180,7 +186,7 @@ public class WaveView extends View {
 
         /** 根据线条长度，最多能绘制多少个数据点*/
         row = (int) (mWidth / WAVE_LINE_WIDTH);
-        dataArray = new float[row + 10];
+        dataArray = new float[row];
     }
 
     @Override
@@ -192,7 +198,7 @@ public class WaveView extends View {
             drawGrid(canvas);
         }
         /** 绘制折线*/
-        switch (drawMode){
+        switch (drawMode) {
             case 0:
                 drawWaveLineNormal(canvas);
                 break;
@@ -200,19 +206,21 @@ public class WaveView extends View {
                 drawWaveLineLoop(canvas);
                 break;
         }
+        draw_index += 1;
+        if (draw_index >= row) {
+            draw_index = 0;
+        }
     }
 
     /**
      * 常规模式绘制折线
      *
      * @param canvas
-     * */
-    private void drawWaveLineNormal(Canvas canvas){
-        drawPathFromDatas(canvas, 0, row);
-        if (drawMode == NORMAL_MODE){
-            for (int i=0;i<row;i++){
-                dataArray[i] = dataArray[i + 1];
-            }
+     */
+    private void drawWaveLineNormal(Canvas canvas) {
+        drawPathFromDatas(canvas, 0, row - 1);
+        for (int i = 0; i < row - 1; i++) {
+            dataArray[i] = dataArray[i + 1];
         }
     }
 
@@ -222,27 +230,22 @@ public class WaveView extends View {
      * @param canvas
      */
     private void drawWaveLineLoop(Canvas canvas) {
-        if (draw_index < row - 7){
-            /** 绘制两条中间有断开的线*/
-            drawPathFromDatas(canvas, 0, draw_index - 3);
-            drawPathFromDatas(canvas, draw_index + 5, row);
-        }else {
-            /** 数据绘制到末尾，则只绘制一条线*/
-            drawPathFromDatas(canvas, 0, draw_index - 1);
-        }
+        drawPathFromDatas(canvas, (row - 1) - draw_index > 8 ? 0 : 8 - ((row - 1) - draw_index), draw_index);
+        drawPathFromDatas(canvas, Math.min(draw_index + 8, row - 1), row - 1);
     }
 
     /**
      * 取数组中的指定一段数据来绘制折线
+     *
      * @param start 起始数据位
-     * @param end 结束数据位
-     * */
-    private void drawPathFromDatas(Canvas canvas, int start, int end){
+     * @param end   结束数据位
+     */
+    private void drawPathFromDatas(Canvas canvas, int start, int end) {
         mPath.reset();
         startY = mHeight / 2 - dataArray[start] * (mHeight / (MAX_VALUE * 2));
         mPath.moveTo(start * WAVE_LINE_WIDTH, startY);
-        for (int i = start; i < end; i++) {
-            if (isRefresh){
+        for (int i = start + 1; i < end + 1; i++) {
+            if (isRefresh) {
                 isRefresh = false;
                 return;
             }
@@ -288,10 +291,7 @@ public class WaveView extends View {
      * 添加新的数据
      */
     public void showLine(float line) {
-        if (draw_index >= row) {
-            draw_index = 0;
-        }
-        switch (drawMode){
+        switch (drawMode) {
             case 0:
                 /** 常规模式数据添加至最后一位*/
                 dataArray[row - 1] = line;
@@ -301,7 +301,6 @@ public class WaveView extends View {
                 dataArray[draw_index] = line;
                 break;
         }
-        draw_index += 1;
         postInvalidate();
     }
 
@@ -312,10 +311,11 @@ public class WaveView extends View {
     }
 
     public WaveView setWaveLineWidth(int width) {
+        draw_index = 0;
         this.WAVE_LINE_WIDTH = width;
         row = (int) (mWidth / WAVE_LINE_WIDTH);
         isRefresh = true;
-        dataArray = new float[row + 10];
+        dataArray = new float[row];
         return this;
     }
 
@@ -344,7 +344,7 @@ public class WaveView extends View {
         return this;
     }
 
-    public WaveView setWaveDrawMode(int draw_mode){
+    public WaveView setWaveDrawMode(int draw_mode) {
         this.drawMode = draw_mode;
         return this;
     }

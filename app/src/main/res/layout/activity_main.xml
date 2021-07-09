@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/tv_wave1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="波形图1"
@@ -26,6 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         app:draw_mode="loop"
         app:max_value="30"
         app:wave_background="#000000"

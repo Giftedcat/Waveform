@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.SeekBar;
 
 import com.giftedcat.wavelib.utils.WaveUtil;
 import com.giftedcat.wavelib.view.WaveView;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private WaveView wave_view1, wave_view2;
 
     private SeekBar seekBar;
+
+//    float data = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
         });
         waveUtil1.showWaveData(wave_view1);
         waveUtil2.showWaveData(wave_view2);
-
+//        findViewById(R.id.tv_wave1).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                data = new Random().nextFloat()*(20f)-10f;
+//                Log.i("data is --------------", data + "");
+//                wave_view1.showLine(data);//取得是-10到10间的浮点数
+//            }
+//        });
     }
 
     @Override
