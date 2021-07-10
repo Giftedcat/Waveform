@@ -1,3 +1,19 @@
+添加库
+
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+```
+	dependencies {
+	        implementation 'com.github.Giftedcat:Waveform:1.1'
+	}
+```
+
 # 一、前言
 
 2021年的第一天，这也是我今年发布的第一篇博客，为了达成在元旦当天发布博客的成就，在大家欢庆元旦的时候，我忙忙碌碌的写了一整天的代码，祝愿自己新的一年，一帆风顺，牛气冲天
@@ -149,7 +165,7 @@ allprojects {
 ```
 ```
 	dependencies {
-	        implementation 'com.github.Giftedcat:Waveform:1.0'
+	        implementation 'com.github.Giftedcat:Waveform:1.1'
 	}
 ```
 
