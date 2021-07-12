@@ -24,7 +24,7 @@ allprojects {
 
 # 二、效果图
 
-![image](https://upload-images.jianshu.io/upload_images/20395467-201e11915b19b2b8.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/20395467-0c4914cda75f6aed.gif?imageMogr2/auto-orient/strip)
 
 图一是心电图效果，图二是一个滚动的波形图
 
