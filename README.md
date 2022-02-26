@@ -9,7 +9,7 @@ https://juejin.cn/post/6912791803779350536
 
 # 如何使用
 
-##（一）添加库
+## （一）添加库
 ```
     allprojects {
 		repositories {
@@ -23,7 +23,7 @@ https://juejin.cn/post/6912791803779350536
 	        implementation 'com.github.Giftedcat:Waveform:1.2'
 	}
 ```
-##（二）布局文件
+## （二）布局文件
 波形支持两种滚动模式
 通过修改draw_mode
 ```
