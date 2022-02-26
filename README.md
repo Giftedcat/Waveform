@@ -20,7 +20,7 @@ https://juejin.cn/post/6912791803779350536
 ```
 ```
 	dependencies {
-	        implementation 'com.github.Giftedcat:Waveform:1.2'
+	        implementation 'com.github.Giftedcat:Waveform:1.2.2'
 	}
 ```
 ## （二）布局文件
