@@ -1,4 +1,4 @@
-# Waveform - 1.2 更新，支持添加多条数据
+# Waveform - 1.3 更新，支持添加多条数据
 
 # 完整博客地址:
 https://juejin.cn/post/6912791803779350536
@@ -20,7 +20,7 @@ https://juejin.cn/post/6912791803779350536
 ```
 ```
 	dependencies {
-	        implementation 'com.github.Giftedcat:Waveform:1.2.2'
+	        implementation 'com.github.Giftedcat:Waveform:1.3.2'
 	}
 ```
 ## （二）布局文件
@@ -76,7 +76,7 @@ https://juejin.cn/post/6912791803779350536
     float data = new Random().nextFloat()*(20f)-10f;
     waveShowView.showLine(data);//取得是-10到10间的浮点数
 ```
-#### 3.2添加多条数据(1.2版本)
+#### 3.2添加多条数据(1.3版本)
 
 ```
     float[] datas = new float[length];
