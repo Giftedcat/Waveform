@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.2.1"
+        versionCode 4
+        versionName "1.2.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,7 +44,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.giftedcat'
                 artifactId = 'wavelib'
-                version = '1.2.1'
+                version = '1.2.2'
             }
         }
     }
