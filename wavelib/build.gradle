@@ -1,19 +1,19 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-group = 'com.giftedcat'
-version = '1.3'
+group = 'com.github.Giftedcat'
+version = '1.3.2'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.3"
 
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.3"
+        versionCode 6
+        versionName "1.3.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -26,6 +26,13 @@ android {
         }
     }
 
+
+}
+
+task comps {
+    afterEvaluate {
+        println("Components: " + components*.name)
+    }
 }
 
 dependencies {
@@ -35,7 +42,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
 }
 
 afterEvaluate {
@@ -43,9 +49,10 @@ afterEvaluate {
         publications {
             // Creates a Maven publication called "release".
             release(MavenPublication) {
-                groupId = 'com.giftedcat'
-                artifactId = 'wavelib'
-                version = '1.3'
+                from components.release
+                groupId = 'com.github.Giftedcat'
+                artifactId = 'Waveform'
+                version = '1.3.2'
             }
         }
     }
