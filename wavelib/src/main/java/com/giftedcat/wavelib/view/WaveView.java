@@ -93,6 +93,9 @@ public class WaveView extends View {
 
     private boolean isRefresh;
 
+    /** 常规模式下，需要一次绘制的点的数量*/
+    private int draw_point_length;
+
 
     /**
      * 网格是否可见
@@ -219,8 +222,8 @@ public class WaveView extends View {
      */
     private void drawWaveLineNormal(Canvas canvas) {
         drawPathFromDatas(canvas, 0, row - 1);
-        for (int i = 0; i < row - 1; i++) {
-            dataArray[i] = dataArray[i + 1];
+        for (int i = 0; i < row - draw_point_length; i++) {
+            dataArray[i] = dataArray[i + draw_point_length];
         }
     }
 
@@ -294,6 +297,7 @@ public class WaveView extends View {
         switch (drawMode) {
             case 0:
                 /** 常规模式数据添加至最后一位*/
+                draw_point_length = 1;
                 dataArray[row - 1] = line;
                 break;
             case 1:
@@ -302,6 +306,51 @@ public class WaveView extends View {
                 break;
         }
         postInvalidate();
+    }
+
+    /**
+     * 添加多个点
+     */
+    public void showLines(float[] lines) {
+        switch (drawMode){
+            case 0:
+                /** 常规模式绘制多个点*/
+                draw_point_length = lines.length;
+                showLinesNormal(lines);
+                break;
+            case 1:
+                /** 轮询方式添加多个点*/
+                showLinesLoop(lines);
+                break;
+        }
+        postInvalidate();
+    }
+
+    /**
+     * 常规的方式添加多个点
+     * */
+    public void showLinesNormal(float[] lines){
+        for (int i=0;i<lines.length;i++){
+            dataArray[row - (lines.length - i)] = lines[i];
+        }
+    }
+
+    /**
+     * 轮询方式添加多个点
+     * */
+    public void showLinesLoop(float[] lines){
+        int temporary_index = draw_index;
+        for (int i = 0; i < lines.length; i++) {
+            dataArray[temporary_index] = lines[i];
+            temporary_index += 1;
+            if (temporary_index > dataArray.length - 1)
+                temporary_index = 0;
+        }
+        if (temporary_index - 1 < 0) {
+            draw_index = row - 1;
+        } else {
+            draw_index = temporary_index - 1;
+        }
     }
 
 

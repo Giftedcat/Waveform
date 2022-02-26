@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        waveUtil1.showWaveData(wave_view1);
-        waveUtil2.showWaveData(wave_view2);
+        waveUtil1.showWaveDatas(2, wave_view1);
+        waveUtil2.showWaveDatas(1, wave_view2);
 //        findViewById(R.id.tv_wave1).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
